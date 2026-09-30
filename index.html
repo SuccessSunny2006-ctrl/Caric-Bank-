@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARIC BANK</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{background:#05070b;color:#fff;min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* LOADER */
+#pageLoader{
+ position:fixed;inset:0;background:#05070b;z-index:9999;
+ display:flex;align-items:center;justify-content:center;
+ transition:.5s
+}
+.loader-content{text-align:center}
+.loader-logo{font-size:30px;font-weight:900;letter-spacing:2px}
+.loader-logo span{color:#168cff}
+.loader-ring{
+ width:42px;height:42px;border:3px solid #17202d;
+ border-top-color:#168cff;border-radius:50%;
+ margin:25px auto 14px;animation:spin .7s linear infinite
+}
+.loader-text{font-size:12px;color:#718094}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* HEADER */
+header{
+ height:70px;padding:0 7%;display:flex;align-items:center;
+ justify-content:space-between;background:#070a10;
+ border-bottom:1px solid #131c28
+}
+.logo{font-size:21px;font-weight:900;letter-spacing:1px}
+.logo span{color:#168cff}
+.header-btn,.logout-btn{
+ background:#101722;border:1px solid #243244;color:#fff;
+ padding:10px 16px;border-radius:8px
+}
+.header-btn:hover,.logout-btn:hover{border-color:#168cff}
+
+/* MAIN */
+main{max-width:1100px;margin:auto;padding:50px 18px}
+
+/* WELCOME */
+.welcome{text-align:center;max-width:700px;margin:0 auto 32px}
+.badge{
+ display:inline-block;padding:7px 13px;border-radius:30px;
+ color:#168cff;border:1px solid #164a77;background:#071321;
+ font-size:10px;font-weight:bold;letter-spacing:1px;margin-bottom:16px
+}
+.welcome h1{font-size:clamp(34px,6vw,55px);margin-bottom:14px}
+.welcome h1 span{color:#168cff}
+.welcome p{color:#8290a2;line-height:1.7}
+
+/* AUTH */
+.auth-card{
+ max-width:500px;margin:auto;background:#0b0f16;
+ border:1px solid #182433;border-radius:18px;padding:30px;
+ box-shadow:0 25px 80px #0008
+}
+.auth-header{margin-bottom:25px}
+.auth-header h2{font-size:25px;margin-bottom:7px}
+.auth-header p{color:#778394;font-size:13px}
+.progress-top{
+ display:flex;justify-content:space-between;color:#697587;
+ font-size:11px;margin-bottom:8px
+}
+.progress-bar{height:5px;background:#151c27;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;background:#168cff;width:12.5%;transition:.3s}
+.step{display:none}.step.active{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.field{margin-bottom:17px}
+.field label{display:block;font-size:12px;color:#bdc7d4;margin-bottom:8px}
+.field input,.field select{
+ width:100%;padding:14px;background:#070a10;color:#fff;
+ border:1px solid #202b39;border-radius:9px;outline:none
+}
+.field input:focus,.field select:focus{border-color:#168cff}
+.field input::placeholder{color:#536071}
+.field select option{background:#0b0f16}
+.phone-row{display:grid;grid-template-columns:100px 1fr;gap:8px}
+.actions{display:flex;gap:9px;margin-top:23px}
+.btn{
+ width:100%;padding:14px;border-radius:9px;border:none;
+ font-weight:bold
+}
+.btn-primary{background:#168cff;color:#fff}
+.btn-primary:hover{background:#0876dd}
+.btn-secondary{background:#141b24;color:#cbd3de;border:1px solid #26313f}
+.password-wrap{position:relative}
+.password-wrap input{padding-right:65px}
+.show-password{
+ position:absolute;right:10px;top:50%;transform:translateY(-50%);
+ border:0;background:none;color:#168cff;font-size:11px
+}
+.small-note{font-size:10px;color:#657285;line-height:1.5;margin-top:7px}
+.login-box{text-align:center;color:#687487;font-size:12px;margin-top:22px}
+.login-box button{border:0;background:none;color:#168cff;font-weight:bold}
+.prototype-note{
+ text-align:center;color:#4f5b6b;font-size:9px;line-height:1.5;margin-top:18px
+}
+.otp-box{text-align:center;padding:5px 0}
+.otp-icon{
+ width:55px;height:55px;border-radius:50%;margin:0 auto 15px;
+ display:flex;align-items:center;justify-content:center;
+ background:#071a2b;color:#168cff;font-size:24px
+}
+.otp-box h3{margin-bottom:7px}
+.otp-box p{font-size:12px;color:#778394;line-height:1.5}
+.otp-input{text-align:center;letter-spacing:9px;font-size:24px!important;font-weight:bold;margin-top:18px}
+
+/* DASHBOARD */
+.dashboard{display:none}.dashboard.active{display:block}
+.dash-top{
+ display:flex;justify-content:space-between;align-items:center;
+ margin-bottom:24px
+}
+.dash-top h2{font-size:25px}
+.dash-top p{color:#6e7b8d;font-size:12px;margin-top:5px}
+
+/* BALANCE */
+.balance-card{
+ position:relative;overflow:hidden;
+ background:linear-gradient(135deg,#071321,#0b1725 60%,#06101b);
+ border:1px solid #17436b;border-radius:20px;padding:27px;
+ margin-bottom:18px
+}
+.balance-card:after{
+ content:"";position:absolute;width:190px;height:190px;
+ right:-80px;top:-80px;border-radius:50%;
+ border:35px solid #168cff12
+}
+.balance-label{font-size:10px;color:#718095;letter-spacing:1px}
+.balance{font-size:39px;font-weight:900;margin:9px 0 15px}
+.account-row{
+ display:flex;align-items:center;gap:9px;color:#6f7d90;font-size:11px
+}
+.copy-btn{
+ border:1px solid #273749;background:#101a26;color:#168cff;
+ border-radius:6px;padding:5px 8px;font-size:10px
+}
+
+/* QUICK ACTIONS */
+.quick-actions{
+ display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px
+}
+.quick{
+ background:#0b1018;border:1px solid #182432;border-radius:13px;
+ padding:17px 10px;text-align:center;color:#fff
+}
+.quick-icon{
+ width:37px;height:37px;margin:0 auto 9px;border-radius:10px;
+ display:flex;align-items:center;justify-content:center;
+ background:#071a2b;color:#168cff;font-size:17px
+}
+.quick span{font-size:11px}
+
+/* DASH GRID */
+.dash-grid{
+ display:grid;grid-template-columns:1.35fr .8fr;gap:16px
+}
+.panel{
+ background:#0b0f16;border:1px solid #182330;border-radius:15px;
+ padding:20px
+}
+.panel-title{
+ display:flex;justify-content:space-between;align-items:center;
+ margin-bottom:18px
+}
+.panel-title h3{font-size:14px}
+.panel-title button{
+ background:none;border:0;color:#168cff;font-size:11px
+}
+
+/* TRANSACTIONS */
+.transaction{
+ display:flex;align-items:center;gap:11px;padding:13px 0;
+ border-bottom:1px solid #151d27
+}
+.transaction:last-child{border-bottom:0}
+.tx-icon{
+ width:37px;height:37px;border-radius:50%;
+ background:#101923;display:flex;align-items:center;
+ justify-content:center;color:#168cff
+}
+.tx-main{flex:1}
+.tx-main strong{display:block;font-size:12px}
+.tx-main small{display:block;color:#647183;font-size:10px;margin-top:4px}
+.tx-amount{font-size:12px;font-weight:bold}
+.incoming{color:#2bc48a}.outgoing{color:#ff6b6b}
+
+/* PROFILE */
+.profile-row{
+ display:flex;justify-content:space-between;gap:15px;
+ padding:12px 0;border-bottom:1px solid #151d27;font-size:11px
+}
+.profile-row:last-child{border-bottom:0}
+.profile-row span:first-child{color:#667386}
+.profile-row span:last-child{text-align:right;color:#dce2ea}
+
+/* SECURITY */
+.security{
+ margin-top:16px;padding:15px;background:#07120d;
+ border:1px solid #153c2b;border-radius:11px
+}
+.security strong{font-size:12px;color:#36d89b}
+.security p{font-size:10px;color:#6e8177;margin-top:5px;line-height:1.5}
+
+/* MODALS */
+.modal{
+ position:fixed;inset:0;background:#000b;display:none;
+ align-items:center;justify-content:center;padding:18px;z-index:3000
+}
+.modal.active{display:flex}
+.modal-box{
+ width:100%;max-width:450px;background:#0b0f16;
+ border:1px solid #1b2a39;border-radius:16px;padding:24px
+}
+.modal-close{
+ float:right;border:0;background:none;color:#718094;
+ font-size:21px
+}
+.modal-box h3{font-size:20px;margin-bottom:7px}
+.modal-box>p{color:#758194;font-size:12px;line-height:1.5;margin-bottom:20px}
+
+/* ALERT */
+.alert{
+ position:fixed;right:18px;bottom:18px;width:min(370px,calc(100% - 36px));
+ background:#0d131c;border:1px solid #243141;border-left:4px solid #168cff;
+ border-radius:10px;padding:15px;z-index:5000;display:none
+}
+.alert.active{display:block;animation:fade .25s}
+.alert strong{font-size:13px}.alert p{color:#8290a0;font-size:11px;margin-top:5px;line-height:1.5}
+
+/* ACTION LOADER */
+#actionLoader{
+ position:fixed;inset:0;background:#05070be8;z-index:4500;
+ display:none;align-items:center;justify-content:center
+}
+#actionLoader.active{display:flex}
+.action-loader-box{text-align:center}
+.action-loader-box .loader-ring{margin:0 auto 17px}
+.action-loader-title{font-weight:bold;font-size:15px}
+.action-loader-sub{color:#687587;font-size:11px;margin-top:6px}
+
+/* RESPONSIVE */
+@media(max-width:760px){
+ .dash-grid{grid-template-columns:1fr}
+ .quick-actions{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:500px){
+ main{padding:30px 13px}
+ .auth-card{padding:22px}
+ .balance{font-size:32px}
+ .dash-top{align-items:flex-start}
+ .actions{flex-direction:column}
+ .phone-row{grid-template-columns:88px 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- OPENING LOADER -->
+<div id="pageLoader">
+    <div class="loader-content">
+        <div class="loader-logo">CARIC <span>BANK</span></div>
+        <div class="loader-ring"></div>
+        <div class="loader-text">Loading secure banking...</div>
+    </div>
+</div>
+
+<!-- ACTION LOADER -->
+<div id="actionLoader">
+    <div class="action-loader-box">
+        <div class="loader-ring"></div>
+        <div class="action-loader-title" id="actionLoaderTitle">Please wait...</div>
+        <div class="action-loader-sub" id="actionLoaderSub">
+            Processing request
+        </div>
+    </div>
+</div>
+
+<header>
+    <div class="logo">CARIC <span>BANK</span></div>
+    <button class="header-btn" id="headerButton" onclick="showLogin()">Login</button>
+</header>
+
+<main>
+
+<!-- AUTH -->
+<section id="authSection">
+
+<div class="welcome">
+    <div class="badge">SECURE BANKING PLATFORM</div>
+    <h1>Banking made <span>simple.</span></h1>
+    <p>Manage your account, view transactions and access your banking services.</p>
+</div>
+
+<!-- SIGNUP -->
+<div class="auth-card" id="signupCard">
+
+<div class="auth-header">
+    <h2>Create Account</h2>
+    <p>Complete the steps below to create your account.</p>
+</div>
+
+<div class="progress-top">
+    <span id="stepLabel">Step 1 of 8</span>
+    <span id="stepPercent">13%</span>
+</div>
+
+<div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<br>
+
+<!-- 1 -->
+<div class="step active" id="step1">
+    <div class="field">
+        <label>Full Name</label>
+        <input id="fullName" type="text" placeholder="Enter your full name">
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+    </div>
+</div>
+
+<!-- 2 -->
+<div class="step" id="step2">
+    <div class="field">
+        <label>Email Address</label>
+        <input id="email" type="email" placeholder="you@example.com">
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+    </div>
+</div>
+
+<!-- 3 -->
+<div class="step" id="step3">
+    <div class="field">
+        <label>Password</label>
+        <div class="password-wrap">
+            <input id="password" type="password" placeholder="Create a password">
+            <button class="show-password" onclick="togglePassword()">Show</button>
+        </div>
+        <div class="small-note">Use at least 8 characters.</div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+    </div>
+</div>
+
+<!-- 4 -->
+<div class="step" id="step4">
+    <div class="field">
+        <label>Phone Number</label>
+
+        <div class="phone-row">
+            <select id="countryCode">
+                <option value="+234">+234</option>
+                <option value="+1">+1</option>
+                <option value="+44">+44</option>
+                <option value="+27">+27</option>
+                <option value="+233">+233</option>
+                <option value="+254">+254</option>
+                <option value="+91">+91</option>
+                <option value="+971">+971</option>
+            </select>
+
+            <input id="phone" type="tel" placeholder="8012345678">
+        </div>
+
+        <div class="small-note">
+            Verify your phone number to continue.
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" onclick="sendVerificationCode()">Verify Number</button>
+    </div>
+</div>
+
+<!-- 5 -->
+<div class="step" id="step5">
+    <div class="otp-box">
+        <div class="otp-icon">✓</div>
+        <h3>Verify Your Number</h3>
+        <p>Enter the 6-digit verification code.</p>
+
+        <input
+            id="otp"
+            class="otp-input"
+            maxlength="6"
+            inputmode="numeric"
+            placeholder="000000"
+        >
+
+        <div class="small-note">
+            Verification code:
+            <strong id="demoCode"></strong>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" onclick="verifyCode()">Verify & Continue</button>
+    </div>
+</div>
+
+<!-- 6 -->
+<div class="step" id="step6">
+    <div class="field">
+        <label>Age</label>
+        <input id="age" type="number" min="18" max="120" placeholder="Enter your age">
+        <div class="small-note">You must be 18 or older.</div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+    </div>
+</div>
+
+<!-- 7 -->
+<div class="step" id="step7">
+    <div class="field">
+        <label>Country</label>
+
+        <select id="country">
+            <option value="">Select your country</option>
+            <option>Nigeria</option>
+            <option>United States</option>
+            <option>United Kingdom</option>
+            <option>Ghana</option>
+            <option>Kenya</option>
+            <option>South Africa</option>
+            <option>Canada</option>
+            <option>United Arab Emirates</option>
+            <option>India</option>
+            <option>Other</option>
+        </select>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+    </div>
+</div>
+
+<!-- 8 -->
+<div class="step" id="step8">
+    <div class="field">
+        <label>Account Currency</label>
+
+        <select id="currency">
+            <option value="">Select currency</option>
+            <option value="NGN">NGN — Nigerian Naira</option>
+            <option value="USD">USD — US Dollar</option>
+            <option value="GBP">GBP — British Pound</option>
+            <option value="EUR">EUR — Euro</option>
+            <option value="GHS">GHS — Ghanaian Cedi</option>
+            <option value="KES">KES — Kenyan Shilling</option>
+            <option value="ZAR">ZAR — South African Rand</option>
+            <option value="CAD">CAD — Canadian Dollar</option>
+            <option value="AED">AED — UAE Dirham</option>
+            <option value="INR">INR — Indian Rupee</option>
+        </select>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="previousStep()">Back</button>
+        <button class="btn btn-primary" onclick="createAccount()">Create Account</button>
+    </div>
+</div>
+
+<div class="login-box">
+    Already have an account?
+    <button onclick="showLogin()">Login</button>
+</div>
+
+<div class="prototype-note">
+    Local account interface. No real financial account or transaction is created.
+</div>
+
+</div>
+
+<!-- LOGIN -->
+<div class="auth-card hidden" id="loginCard">
+
+<div class="auth-header">
+    <h2>Welcome Back</h2>
+    <p>Login to access your account.</p>
+</div>
+
+<div class="field">
+    <label>Email Address</label>
+    <input id="loginEmail" type="email" placeholder="you@example.com">
+</div>
+
+<div class="field">
+    <label>Password</label>
+
+    <div class="password-wrap">
+        <input id="loginPassword" type="password" placeholder="Enter your password">
+        <button class="show-password" onclick="toggleLoginPassword()">Show</button>
+    </div>
+</div>
+
+<div class="actions">
+    <button class="btn btn-primary" onclick="login()">Login</button>
+</div>
+
+<div class="login-box">
+    Don't have an account?
+    <button onclick="showSignup()">Create Account</button>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- DASHBOARD -->
+<section class="dashboard" id="dashboard">
+
+<div class="dash-top">
+    <div>
+        <h2 id="dashboardGreeting">Welcome</h2>
+        <p>Your account overview</p>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+
+<!-- BALANCE -->
+<div class="balance-card">
+
+    <div class="balance-label">AVAILABLE BALANCE</div>
+
+    <div class="balance" id="dashboardBalance">
+        ₦0.00
+    </div>
+
+    <div class="account-row">
+        Account Number:
+        <strong id="dashboardAccountNumber">—</strong>
+        <button class="copy-btn" onclick="copyAccount()">COPY</button>
+    </div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+<div class="quick-actions">
+
+    <button class="quick" onclick="openSendMoney()">
+        <div class="quick-icon">↑</div>
+        <span>Send</span>
+    </button>
+
+    <button class="quick" onclick="openIncoming()">
+        <div class="quick-icon">↓</div>
+        <span>Receive</span>
+    </button>
+
+    <button class="quick" onclick="showHistory()">
+        <div class="quick-icon">↕</div>
+        <span>Transactions</span>
+    </button>
+
+    <button class="quick" onclick="showProfile()">
+        <div class="quick-icon">●</div>
+        <span>Profile</span>
+    </button>
+
+</div>
+
+
+<div class="dash-grid">
+
+<!-- TRANSACTIONS -->
+<div class="panel">
+
+    <div class="panel-title">
+        <h3>Recent Transactions</h3>
+        <button onclick="showHistory()">View all</button>
+    </div>
+
+    <div id="recentTransactions"></div>
+
+</div>
+
+
+<!-- ACCOUNT -->
+<div>
+
+<div class="panel">
+
+    <div class="panel-title">
+        <h3>Account Details</h3>
+    </div>
+
+    <div class="profile-row">
+        <span>Name</span>
+        <span id="profileName">—</span>
+    </div>
+
+    <div class="profile-row">
+        <span>Email</span>
+        <span id="profileEmail">—</span>
+    </div>
+
+    <div class="profile-row">
+        <span>Phone</span>
+        <span id="profilePhone">—</span>
+    </div>
+
+    <div class="profile-row">
+        <span>Age</span>
+        <span id="profileAge">—</span>
+    </div>
+
+    <div class="profile-row">
+        <span>Country</span>
+        <span id="profileCountry">—</span>
+    </div>
+
+    <div class="profile-row">
+        <span>Currency</span>
+        <span id="profileCurrency">—</span>
+    </div>
+
+</div>
+
+<div class="security">
+    <strong>✓ Account Security</strong>
+    <p>Your phone verification status is active.</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="prototype-note">
+    Account balances and transaction records are stored locally for this interface.
+</div>
+
+</section>
+
+</main>
+
+
+<!-- SEND MODAL -->
+<div class="modal" id="sendModal">
+<div class="modal-box">
+
+<button class="modal-close" onclick="closeModal('sendModal')">×</button>
+
+<h3>Send Money</h3>
+<p>Enter the recipient's details below.</p>
+
+<div class="field">
+<label>Recipient Name</label>
+<input id="recipientName" placeholder="Recipient name">
+</div>
+
+<div class="field">
+<label>Recipient Account Number</label>
+<input id="recipientAccount" placeholder="Account number">
+</div>
+
+<div class="field">
+<label>Amount</label>
+<input id="sendAmount" type="number" min="1" placeholder="0.00">
+</div>
+
+<button class="btn btn-primary" onclick="sendMoney()">Continue</button>
+
+</div>
+</div>
+
+
+<!-- RECEIVE MODAL -->
+<div class="modal" id="incomingModal">
+<div class="modal-box">
+
+<button class="modal-close" onclick="closeModal('incomingModal')">×</button>
+
+<h3>Receive Money</h3>
+<p>Enter the incoming transfer details.</p>
+
+<div class="field">
+<label>Sender Name</label>
+<input id="senderName" placeholder="Sender name">
+</div>
+
+<div class="field">
+<label>Reference</label>
+<input id="incomingReference" placeholder="Transfer reference">
+</div>
+
+<div class="field">
+<label>Amount</label>
+<input id="incomingAmount" type="number" min="1" placeholder="0.00">
+</div>
+
+<button class="btn btn-primary" onclick="simulateIncoming()">Continue</button>
+
+</div>
+</div>
+
+
+<!-- HISTORY MODAL -->
+<div class="modal" id="historyModal">
+<div class="modal-box">
+
+<button class="modal-close" onclick="closeModal('historyModal')">×</button>
+
+<h3>Transaction History</h3>
+<p>Account activity summary.</p>
+
+<div id="historyList"></div>
+
+</div>
+</div>
+
+
+<!-- PROFILE MODAL -->
+<div class="modal" id="profileModal">
+<div class="modal-box">
+
+<button class="modal-close" onclick="closeModal('profileModal')">×</button>
+
+<h3>Profile</h3>
+<p>Your account information.</p>
+
+<div id="profileModalContent"></div>
+
+</div>
+</div>
+
+
+<!-- ALERT -->
+<div class="alert" id="alertBox">
+<strong id="alertTitle">Notice</strong>
+<p id="alertMessage"></p>
+</div>
+
+
+<script>
+
+const USERS_KEY="caricBankDemoUsers";
+const CURRENT_USER_KEY="caricCurrentUser";
+
+let currentStep=1;
+let verificationCode="";
+let signupData={};
+
+
+/* LOADER */
+
+function hidePageLoader(){
+    setTimeout(()=>{
+        document.getElementById("pageLoader").style.opacity="0";
+
+        setTimeout(()=>{
+            document.getElementById("pageLoader").style.display="none";
+        },500);
+
+    },1000);
+}
+
+window.addEventListener("load",hidePageLoader);
+
+
+/* ACTION LOADER */
+
+function showLoader(title,sub="Please wait..."){
+    document.getElementById("actionLoaderTitle").textContent=title;
+    document.getElementById("actionLoaderSub").textContent=sub;
+    document.getElementById("actionLoader").classList.add("active");
+}
+
+function hideLoader(){
+    document.getElementById("actionLoader").classList.remove("active");
+}
+
+
+/* STORAGE */
+
+function getUsers(){
+    try{
+        return JSON.parse(localStorage.getItem(USERS_KEY))||[];
+    }catch{
+        return [];
+    }
+}
+
+function saveUsers(users){
+    localStorage.setItem(USERS_KEY,JSON.stringify(users));
+}
+
+function getCurrentUser(){
+    try{
+        return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+    }catch{
+        return null;
+    }
+}
+
+
+/* ALERT */
+
+function showAlert(title,message){
+    document.getElementById("alertTitle").textContent=title;
+    document.getElementById("alertMessage").textContent=message;
+
+    const box=document.getElementById("alertBox");
+    box.classList.add("active");
+
+    setTimeout(()=>{
+        box.classList.remove("active");
+    },4000);
+}
+
+
+/* LOGIN / SIGNUP */
+
+function showLogin(){
+    document.getElementById("signupCard").classList.add("hidden");
+    document.getElementById("loginCard").classList.remove("hidden");
+}
+
+function showSignup(){
+    document.getElementById("loginCard").classList.add("hidden");
+    document.getElementById("signupCard").classList.remove("hidden");
+}
+
+
+/* STEPS */
+
+function updateProgress(){
+    const percent=Math.round((currentStep/8)*100);
+
+    document.getElementById("stepLabel").textContent=
+        `Step ${currentStep} of 8`;
+
+    document.getElementById("stepPercent").textContent=
+        `${percent}%`;
+
+    document.getElementById("progressFill").style.width=
+        `${percent}%`;
+}
+
+function showStep(step){
+
+    document.querySelectorAll(".step").forEach(s=>{
+        s.classList.remove("active");
+    });
+
+    document.getElementById("step"+step).classList.add("active");
+
+    currentStep=step;
+    updateProgress();
+}
+
+function validateStep(){
+
+    if(currentStep===1){
+
+        const name=document.getElementById("fullName").value.trim();
+
+        if(name.length<2){
+            showAlert("Name Required","Enter your full name.");
+            return false;
+        }
+
+        signupData.name=name;
+    }
+
+    if(currentStep===2){
+
+        const email=document.getElementById("email").value.trim();
+
+        if(!email || !email.includes("@")){
+            showAlert("Invalid Email","Enter a valid email address.");
+            return false;
+        }
+
+        signupData.email=email;
+    }
+
+    if(currentStep===3){
+
+        const password=document.getElementById("password").value;
+
+        if(password.length<8){
+            showAlert("Password Too Short","Use at least 8 characters.");
+            return false;
+        }
+
+        signupData.password=password;
+    }
+
+    if(currentStep===6){
+
+        const age=Number(document.getElementById("age").value);
+
+        if(age<18 || age>120){
+            showAlert("Invalid Age","Enter a valid age of 18 or above.");
+            return false;
+        }
+
+        signupData.age=age;
+    }
+
+    if(currentStep===7){
+
+        const country=document.getElementById("country").value;
+
+        if(!country){
+            showAlert("Country Required","Select your country.");
+            return false;
+        }
+
+        signupData.country=country;
+    }
+
+    return true;
+}
+
+function nextStep(){
+
+    if(!validateStep())return;
+
+    if(currentStep<8){
+        showStep(currentStep+1);
+    }
+}
+
+function previousStep(){
+
+    if(currentStep>1){
+        showStep(currentStep-1);
+    }
+}
+
+
+/* PASSWORD */
+
+function togglePassword(){
+
+    const input=document.getElementById("password");
+    const button=event.target;
+
+    if(input.type==="password"){
+        input.type="text";
+        button.textContent="Hide";
+    }else{
+        input.type="password";
+        button.textContent="Show";
+    }
+}
+
+function toggleLoginPassword(){
+
+    const input=document.getElementById("loginPassword");
+    const button=event.target;
+
+    if(input.type==="password"){
+        input.type="text";
+        button.textContent="Hide";
+    }else{
+        input.type="password";
+        button.textContent="Show";
+    }
+}
+
+
+/* PHONE */
+
+function sendVerificationCode(){
+
+    const phone=document.getElementById("phone").value.trim();
+    const prefix=document.getElementById("countryCode").value;
+
+    if(phone.length<7){
+        showAlert("Phone Number Required","Enter a valid phone number.");
+        return;
+    }
+
+    showLoader(
+        "Verifying number...",
+        "Preparing your verification code"
+    );
+
+    setTimeout(()=>{
+
+        verificationCode=
+            Math.floor(100000+Math.random()*900000).toString();
+
+        signupData.phone=`${prefix} ${phone}`;
+
+        document.getElementById("demoCode").textContent=
+            verificationCode;
+
+        hideLoader();
+        showStep(5);
+
+    },1200);
+}
+
+function verifyCode(){
+
+    const code=document.getElementById("otp").value.trim();
+
+    if(code!==verificationCode){
+        showAlert("Verification Failed","The verification code is incorrect.");
+        return;
+    }
+
+    showLoader(
+        "Number verified",
+        "Continuing signup..."
+    );
+
+    setTimeout(()=>{
+        hideLoader();
+        signupData.phoneVerified=true;
+        showStep(6);
+    },900);
+}
+
+
+/* ACCOUNT */
+
+function generateAccountNumber(){
+
+    let users=getUsers();
+    let number;
+
+    do{
+        number=Math.floor(
+            1000000000+Math.random()*9000000000
+        ).toString();
+    }while(users.some(u=>u.accountNumber===number));
+
+    return number;
+}
+
+function createAccount(){
+
+    const currency=document.getElementById("currency").value;
+
+    if(!currency){
+        showAlert("Currency Required","Select your account currency.");
+        return;
+    }
+
+    signupData.currency=currency;
+
+    const users=getUsers();
+
+    if(users.some(u=>
+        u.email.toLowerCase()===
+        signupData.email.toLowerCase()
+    )){
+        showAlert("Account Exists","An account with this email already exists.");
+        return;
+    }
+
+    showLoader(
+        "Creating your account...",
+        "Setting up your banking dashboard"
+    );
+
+    setTimeout(()=>{
+
+        const user={
+            id:"user_"+Date.now(),
+            name:signupData.name,
+            email:signupData.email,
+            password:signupData.password,
+            phone:signupData.phone,
+            phoneVerified:true,
+            age:signupData.age,
+            country:signupData.country,
+            currency:signupData.currency,
+            accountNumber:generateAccountNumber(),
+            balance:0,
+            frozen:false,
+            transactions:[],
+            createdAt:new Date().toISOString()
+        };
+
+        users.push(user);
+        saveUsers(users);
+
+        localStorage.setItem(
+            CURRENT_USER_KEY,
+            JSON.stringify(user)
+        );
+
+        hideLoader();
+
+        loadDashboard(user);
+
+    },1800);
+}
+
+
+/* LOGIN */
+
+function login(){
+
+    const email=document.getElementById("loginEmail").value.trim();
+    const password=document.getElementById("loginPassword").value;
+
+    if(!email||!password){
+        showAlert("Missing Information","Enter your email and password.");
+        return;
+    }
+
+    const users=getUsers();
+
+    const user=users.find(u=>
+        u.email.toLowerCase()===email.toLowerCase() &&
+        u.password===password
+    );
+
+    if(!user){
+        showAlert("Login Failed","Email or password is incorrect.");
+        return;
+    }
+
+    if(user.frozen){
+        showAlert("Account Restricted","This account is unavailable.");
+        return;
+    }
+
+    showLoader(
+        "Signing you in...",
+        "Loading your banking dashboard"
+    );
+
+    setTimeout(()=>{
+
+        localStorage.setItem(
+            CURRENT_USER_KEY,
+            JSON.stringify(user)
+        );
+
+        hideLoader();
+        loadDashboard(user);
+
+    },1200);
+}
+
+
+/* DASHBOARD */
+
+const symbols={
+    NGN:"₦",USD:"$",GBP:"£",EUR:"€",
+    GHS:"₵",KES:"KSh",ZAR:"R",
+    CAD:"C$",AED:"د.إ",INR:"₹"
+};
+
+function money(user,amount){
+    const symbol=symbols[user.currency]||user.currency;
+
+    return symbol+
+        Number(amount||0).toLocaleString(undefined,{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        });
+}
+
+function loadDashboard(user){
+
+    document.getElementById("authSection").classList.add("hidden");
+    document.getElementById("dashboard").classList.add("active");
+
+    document.getElementById("headerButton").textContent="Logout";
+    document.getElementById("headerButton").onclick=logout;
+
+    updateDashboard(user);
+}
+
+function updateDashboard(user){
+
+    document.getElementById("dashboardGreeting").textContent=
+        `Welcome, ${user.name.split(" ")[0]}`;
+
+    document.getElementById("dashboardBalance").textContent=
+        money(user,user.balance);
+
+    document.getElementById("dashboardAccountNumber").textContent=
+        user.accountNumber;
+
+    document.getElementById("profileName").textContent=user.name;
+    document.getElementById("profileEmail").textContent=user.email;
+    document.getElementById("profilePhone").textContent=user.phone;
+    document.getElementById("profileAge").textContent=user.age;
+    document.getElementById("profileCountry").textContent=user.country;
+    document.getElementById("profileCurrency").textContent=user.currency;
+
+    renderRecentTransactions(user);
+}
+
+function renderRecentTransactions(user){
+
+    const box=document.getElementById("recentTransactions");
+    const transactions=user.transactions||[];
+
+    if(!transactions.length){
+
+        box.innerHTML=`
+            <div style="
+                text-align:center;
+                padding:30px 10px;
+                color:#647183;
+                font-size:11px
+            ">
+                No recent transactions
+            </div>
+        `;
+
+        return;
+    }
+
+    box.innerHTML=transactions.slice(0,5).map(tx=>{
+
+        const incoming=tx.type==="Incoming";
+
+        return `
+            <div class="transaction">
+
+                <div class="tx-icon">
+                    ${incoming?"↓":"↑"}
+                </div>
+
+                <div class="tx-main">
+                    <strong>${escapeHTML(
+                        tx.sender||tx.recipient||tx.type
+                    )}</strong>
+
+                    <small>
+                        ${escapeHTML(tx.date||"")}
+                    </small>
+                </div>
+
+                <div class="tx-amount ${incoming?"incoming":"outgoing"}">
+                    ${incoming?"+":"-"}${money(user,tx.amount)}
+                </div>
+
+            </div>
+        `;
+
+    }).join("");
+}
+
+
+/* COPY ACCOUNT */
+
+function copyAccount(){
+
+    const number=document.getElementById(
+        "dashboardAccountNumber"
+    ).textContent;
+
+    navigator.clipboard?.writeText(number);
+
+    showAlert("Copied","Account number copied.");
+}
+
+
+/* SEND */
+
+function openSendMoney(){
+    document.getElementById("sendModal").classList.add("active");
+}
+
+function sendMoney(){
+
+    const recipient=document.getElementById("recipientName").value.trim();
+    const account=document.getElementById("recipientAccount").value.trim();
+    const amount=Number(document.getElementById("sendAmount").value);
+
+    if(!recipient||!account||!amount||amount<=0){
+        showAlert("Missing Information","Complete all transfer fields.");
+        return;
+    }
+
+    closeModal("sendModal");
+
+    showLoader(
+        "Processing transfer...",
+        "Checking transfer details"
+    );
+
+    setTimeout(()=>{
+
+        hideLoader();
+
+        showAlert(
+            "Transfer Unavailable",
+            "This transfer interface does not process real money."
+        );
+
+    },2200);
+}
+
+
+/* RECEIVE */
+
+function openIncoming(){
+    document.getElementById("incomingModal").classList.add("active");
+}
+
+function simulateIncoming(){
+
+    const sender=document.getElementById("senderName").value.trim();
+    const reference=document.getElementById("incomingReference").value.trim();
+    const amount=Number(document.getElementById("incomingAmount").value);
+
+    if(!sender||!reference||!amount||amount<=0){
+        showAlert("Missing Information","Complete all transfer fields.");
+        return;
+    }
+
+    const user=getCurrentUser();
+
+    if(!user)return;
+
+    showLoader(
+        "Recording transfer...",
+        "Updating transaction history"
+    );
+
+    setTimeout(()=>{
+
+        const tx={
+            id:"TXN-"+Date.now(),
+            type:"Incoming",
+            sender,
+            reference,
+            amount,
+            date:new Date().toLocaleString(),
+            status:"Recorded"
+        };
+
+        user.transactions=user.transactions||[];
+        user.transactions.unshift(tx);
+
+        saveCurrentUser(user);
+
+        closeModal("incomingModal");
+
+        document.getElementById("senderName").value="";
+        document.getElementById("incomingReference").value="";
+        document.getElementById("incomingAmount").value="";
+
+        hideLoader();
+
+        showAlert(
+            "Transfer Recorded",
+            "The transaction has been added to your activity history."
+        );
+
+    },1200);
+}
+
+
+/* HISTORY */
+
+function showHistory(){
+
+    const user=getCurrentUser();
+    const list=document.getElementById("historyList");
+    const transactions=user?.transactions||[];
+
+    if(!transactions.length){
+
+        list.innerHTML=`
+            <div style="
+                text-align:center;
+                padding:25px;
+                color:#697688;
+                font-size:12px
+            ">
+                No transactions yet.
+            </div>
+        `;
+
+    }else{
+
+        list.innerHTML=transactions.map(tx=>`
+
+            <div class="transaction">
+
+                <div class="tx-icon">
+                    ${tx.type==="Incoming"?"↓":"↑"}
+                </div>
+
+                <div class="tx-main">
+                    <strong>${escapeHTML(tx.sender||tx.recipient||tx.type)}</strong>
+                    <small>
+                        ${escapeHTML(tx.reference||"")}
+                        <br>
+                        ${escapeHTML(tx.date||"")}
+                    </small>
+                </div>
+
+                <div class="tx-amount ${
+                    tx.type==="Incoming"?"incoming":"outgoing"
+                }">
+                    ${tx.type==="Incoming"?"+":"-"}
+                    ${money(user,tx.amount)}
+                </div>
+
+            </div>
+
+        `).join("");
+    }
+
+    document.getElementById("historyModal").classList.add("active");
+}
+
+
+/* PROFILE */
+
+function showProfile(){
+
+    const user=getCurrentUser();
+
+    document.getElementById("profileModalContent").innerHTML=`
+
+        <div class="profile-row">
+            <span>Full Name</span>
+            <span>${escapeHTML(user.name)}</span>
+        </div>
+
+        <div class="profile-row">
+            <span>Email</span>
+            <span>${escapeHTML(user.email)}</span>
+        </div>
+
+        <div class="profile-row">
+            <span>Phone</span>
+            <span>${escapeHTML(user.phone)}</span>
+        </div>
+
+        <div class="profile-row">
+            <span>Age</span>
+            <span>${user.age}</span>
+        </div>
+
+        <div class="profile-row">
+            <span>Country</span>
+            <span>${escapeHTML(user.country)}</span>
+        </div>
+
+        <div class="profile-row">
+            <span>Currency</span>
+            <span>${escapeHTML(user.currency)}</span>
+        </div>
+
+        <div class="profile-row">
+            <span>Account Number</span>
+            <span>${user.accountNumber}</span>
+        </div>
+
+    `;
+
+    document.getElementById("profileModal").classList.add("active");
+}
+
+
+/* MODALS */
+
+function closeModal(id){
+    document.getElementById(id).classList.remove("active");
+}
+
+
+/* SAVE */
+
+function saveCurrentUser(user){
+
+    const users=getUsers();
+
+    const index=users.findIndex(u=>u.id===user.id);
+
+    if(index!==-1){
+        users[index]=user;
+        saveUsers(users);
+    }
+
+    localStorage.setItem(
+        CURRENT_USER_KEY,
+        JSON.stringify(user)
+    );
+
+    updateDashboard(user);
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    localStorage.removeItem(CURRENT_USER_KEY);
+
+    document.getElementById("dashboard").classList.remove("active");
+    document.getElementById("authSection").classList.remove("hidden");
+
+    document.getElementById("headerButton").textContent="Login";
+    document.getElementById("headerButton").onclick=showLogin;
+
+    showLogin();
+
+    showAlert("Logged Out","You have been logged out successfully.");
+}
+
+
+/* ESCAPE */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* AUTO LOGIN */
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+    updateProgress();
+
+    const user=getCurrentUser();
+
+    if(user){
+
+        setTimeout(()=>{
+            loadDashboard(user);
+        },1100);
+
+    }
+});
+
+
+/* OUTSIDE MODAL CLICK */
+
+document.querySelectorAll(".modal").forEach(modal=>{
+
+    modal.addEventListener("click",e=>{
+
+        if(e.target===modal){
+            modal.classList.remove("active");
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CARIC BANK — Admin Demo</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  background:#05070b;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.demo{
+  background:#086cff;
+  text-align:center;
+  padding:8px;
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:1.5px;
+}
+
+.screen{
+  display:none;
+  min-height:calc(100vh - 32px);
+}
+
+.screen.active{
+  display:block;
+}
+
+.logo{
+  font-size:23px;
+  font-weight:800;
+}
+
+.logo span{
+  color:#1683ff;
+}
+
+/* LOGIN */
+
+.login-wrap{
+  min-height:calc(100vh - 32px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+  background:radial-gradient(circle at top,#09234a,#05070b 55%);
+}
+
+.login-box{
+  width:100%;
+  max-width:420px;
+  background:#0c1119;
+  border:1px solid #1d2938;
+  border-radius:18px;
+  padding:32px;
+}
+
+.login-box .logo{
+  margin-bottom:25px;
+}
+
+.login-box h2{
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:#7f8b9d;
+  font-size:14px;
+  line-height:1.6;
+  margin-bottom:25px;
+}
+
+label{
+  display:block;
+  color:#aab4c2;
+  font-size:13px;
+  margin:15px 0 7px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #263244;
+  background:#080c12;
+  color:#fff;
+  outline:none;
+}
+
+input:focus{
+  border-color:#1683ff;
+}
+
+.primary{
+  background:#1683ff;
+  color:#fff;
+  border:0;
+  border-radius:8px;
+  padding:14px 20px;
+  font-weight:bold;
+}
+
+.full{
+  width:100%;
+  margin-top:22px;
+}
+
+.demo-note{
+  text-align:center;
+  color:#687384;
+  font-size:11px;
+  margin-top:18px;
+  line-height:1.5;
+}
+
+/* ADMIN */
+
+.topbar{
+  height:70px;
+  padding:0 5%;
+  background:#080b11;
+  border-bottom:1px solid #171f2b;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.admin-label{
+  color:#1683ff;
+  font-size:10px;
+  margin-top:4px;
+}
+
+.logout{
+  background:#101722;
+  border:1px solid #273344;
+  color:#fff;
+  padding:9px 15px;
+  border-radius:7px;
+}
+
+.content{
+  max-width:1200px;
+  margin:auto;
+  padding:35px 5%;
+}
+
+.heading{
+  margin-bottom:25px;
+}
+
+.heading p{
+  color:#7f8b9d;
+  margin-top:7px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.stat{
+  background:#0c1119;
+  border:1px solid #1b2735;
+  border-radius:14px;
+  padding:20px;
+}
+
+.stat-label{
+  color:#78869a;
+  font-size:12px;
+}
+
+.stat-value{
+  font-size:27px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+/* USERS */
+
+.search{
+  margin-bottom:20px;
+}
+
+.search input{
+  max-width:500px;
+}
+
+.users{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+
+.user-card{
+  background:#0b1017;
+  border:1px solid #192332;
+  border-radius:15px;
+  padding:22px;
+}
+
+.user-header{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.user-name{
+  font-size:17px;
+  font-weight:bold;
+}
+
+.status{
+  font-size:10px;
+  padding:5px 9px;
+  border-radius:30px;
+  background:#12351f;
+  color:#63d88a;
+}
+
+.status.frozen{
+  background:#3b1a1a;
+  color:#ff7777;
+}
+
+.detail{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:10px 0;
+  border-bottom:1px solid #171f2b;
+}
+
+.detail span:first-child{
+  color:#718096;
+  font-size:12px;
+}
+
+.detail span:last-child{
+  font-size:13px;
+  font-weight:bold;
+  text-align:right;
+}
+
+.balance{
+  color:#1683ff;
+  font-size:21px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:18px;
+}
+
+.action{
+  background:#101722;
+  color:#fff;
+  border:1px solid #273344;
+  border-radius:7px;
+  padding:10px 5px;
+  font-size:11px;
+}
+
+.action.fund{
+  background:#0c2d54;
+  border-color:#135b9e;
+}
+
+.action.freeze{
+  color:#ff8585;
+}
+
+.no-results{
+  grid-column:1/-1;
+  text-align:center;
+  color:#687384;
+  padding:30px;
+}
+
+/* MODAL */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:1000;
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.modal{
+  width:100%;
+  max-width:430px;
+  background:#0c1119;
+  border:1px solid #1e2a39;
+  border-radius:16px;
+  padding:27px;
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.close{
+  background:none;
+  border:0;
+  color:#fff;
+  font-size:25px;
+}
+
+.modal p{
+  color:#7f8b9d;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.secondary{
+  background:#101722;
+  color:#fff;
+  border:1px solid #273344;
+  border-radius:8px;
+  padding:14px 20px;
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.modal-actions button{
+  flex:1;
+}
+
+.transaction{
+  padding:12px 0;
+  border-bottom:1px solid #171f2b;
+}
+
+.transaction strong{
+  font-size:13px;
+}
+
+.transaction small{
+  display:block;
+  color:#687384;
+  margin-top:4px;
+}
+
+/* MOBILE */
+
+@media(max-width:750px){
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .users{
+    grid-template-columns:1fr;
+  }
+
+  .content{
+    padding:25px 4%;
+  }
+
+  .topbar{
+    padding:0 4%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="demo">
+  FICTIONAL DEMO — CARIC BANK ADMIN
+</div>
+
+
+<!-- ADMIN LOGIN -->
+
+<section
+  id="loginScreen"
+  class="screen active"
+>
+
+  <div class="login-wrap">
+
+    <div class="login-box">
+
+      <div class="logo">
+        CARIC <span>BANK</span>
+      </div>
+
+      <h2>Admin Portal</h2>
+
+      <p class="subtitle">
+        Manage fictional CARIC BANK demo accounts.
+      </p>
+
+      <form onsubmit="adminLogin(event)">
+
+        <label>Admin Email</label>
+
+        <input
+          id="adminEmail"
+          type="email"
+          placeholder="admin@caric.demo"
+          required
+        >
+
+        <label>Password</label>
+
+        <input
+          id="adminPassword"
+          type="password"
+          placeholder="Password"
+          required
+        >
+
+        <button
+          class="primary full"
+          type="submit"
+        >
+          Login
+        </button>
+
+      </form>
+
+      <div class="demo-note">
+        Demo credentials:<br>
+        admin@caric.demo / admin123
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ADMIN DASHBOARD -->
+
+<section
+  id="adminScreen"
+  class="screen"
+>
+
+  <header class="topbar">
+
+    <div>
+
+      <div class="logo">
+        CARIC <span>BANK</span>
+      </div>
+
+      <div class="admin-label">
+        ADMIN CONTROL PANEL
+      </div>
+
+    </div>
+
+    <button
+      class="logout"
+      onclick="adminLogout()"
+    >
+      Logout
+    </button>
+
+  </header>
+
+
+  <main class="content">
+
+    <div class="heading">
+
+      <h2>Admin Dashboard</h2>
+
+      <p>
+        Manage fictional demo accounts and balances.
+      </p>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Total Demo Users
+        </div>
+
+        <div
+          class="stat-value"
+          id="totalUsers"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Active Accounts
+        </div>
+
+        <div
+          class="stat-value"
+          id="activeUsers"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Total Demo Funds
+        </div>
+
+        <div
+          class="stat-value"
+          id="totalFunds"
+        >
+          $0.00
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search">
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search name, email or account number..."
+        oninput="renderUsers()"
+      >
+
+    </div>
+
+
+    <!-- USERS -->
+
+    <div
+      class="users"
+      id="usersContainer"
+    ></div>
+
+  </main>
+
+</section>
+
+
+<!-- FUND MODAL -->
+
+<div
+  class="overlay"
+  id="fundModal"
+>
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h3>Fund Demo Account</h3>
+
+      <button
+        class="close"
+        onclick="closeModal('fundModal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <p id="fundUserText">
+      Demo balance adjustment.
+    </p>
+
+    <label>
+      Amount
+    </label>
+
+    <input
+      id="fundAmount"
+      type="number"
+      min="0"
+      step="0.01"
+      placeholder="$0.00"
+    >
+
+    <div class="modal-actions">
+
+      <button
+        class="secondary"
+        onclick="closeModal('fundModal')"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="primary"
+        onclick="applyFunding()"
+      >
+        Fund Account
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- TRANSACTIONS -->
+
+<div
+  class="overlay"
+  id="transactionsModal"
+>
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h3>Transactions</h3>
+
+      <button
+        class="close"
+        onclick="closeModal('transactionsModal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div id="transactionContent"></div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const STORAGE_KEY =
+  "caricBankDemoUsers";
+
+let users = JSON.parse(
+  localStorage.getItem(STORAGE_KEY) || "[]"
+);
+
+let selectedUserId = null;
+
+
+/* LOGIN */
+
+function adminLogin(event){
+
+  event.preventDefault();
+
+  const email =
+    document
+      .getElementById("adminEmail")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const password =
+    document
+      .getElementById("adminPassword")
+      .value;
+
+  if(
+    email==="admin@caric.demo" &&
+    password==="admin123"
+  ){
+
+    showScreen("adminScreen");
+
+    renderUsers();
+
+  }else{
+
+    alert(
+      "Invalid demo admin credentials."
+    );
+
+  }
+
+}
+
+
+/* SCREEN */
+
+function showScreen(id){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen=>{
+      screen.classList.remove("active");
+    });
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+}
+
+
+/* LOGOUT */
+
+function adminLogout(){
+
+  showScreen("loginScreen");
+
+  document
+    .getElementById("adminEmail")
+    .value="";
+
+  document
+    .getElementById("adminPassword")
+    .value="";
+
+}
+
+
+/* DATA */
+
+function getUsers(){
+
+  return JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || "[]"
+  );
+
+}
+
+function saveUsers(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(users)
+  );
+
+}
+
+
+/* CREATE DEMO ACCOUNT */
+
+function createDemoUser(){
+
+  users = getUsers();
+
+  if(users.length>0){
+
+    return;
+
+  }
+
+  users.push({
+
+    id:
+      "demo-" + Date.now(),
+
+    name:
+      "Demo Customer",
+
+    email:
+      "customer@caric.demo",
+
+    password:
+      "demo123",
+
+    accountNumber:
+      String(
+        Math.floor(
+          1000000000 +
+          Math.random()*9000000000
+        )
+      ),
+
+    balance:0,
+
+    verified:true,
+
+    frozen:false,
+
+    transactions:[]
+
+  });
+
+  saveUsers();
+
+}
+
+
+/* RENDER */
+
+function renderUsers(){
+
+  users = getUsers();
+
+  const container =
+    document
+      .getElementById("usersContainer");
+
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const filtered =
+    users.filter(user=>
+
+      user.name
+        .toLowerCase()
+        .includes(search) ||
+
+      user.email
+        .toLowerCase()
+        .includes(search) ||
+
+      user.accountNumber
+        .includes(search)
+
+    );
+
+
+  if(filtered.length===0){
+
+    container.innerHTML =
+      `
+        <div class="no-results">
+          No demo users found.
+        </div>
+      `;
+
+  }else{
+
+    container.innerHTML =
+      filtered.map(user=>{
+
+        return `
+
+          <div class="user-card">
+
+            <div class="user-header">
+
+              <div>
+
+                <div class="user-name">
+                  ${escapeHTML(user.name)}
+                </div>
+
+                <small style="color:#687384;">
+                  ${escapeHTML(user.email)}
+                </small>
+
+              </div>
+
+              <div class="status ${user.frozen ? "frozen" : ""}">
+                ${user.frozen ? "FROZEN" : "ACTIVE"}
+              </div>
+
+            </div>
+
+
+            <div class="detail">
+
+              <span>
+                Account Number
+              </span>
+
+              <span>
+                ${user.accountNumber}
+              </span>
+
+            </div>
+
+
+            <div class="detail">
+
+              <span>
+                Demo Balance
+              </span>
+
+              <span class="balance">
+                $${Number(user.balance || 0)
+                  .toLocaleString(
+                    "en-US",
+                    {
+                      minimumFractionDigits:2
+                    }
+                  )}
+              </span>
+
+            </div>
+
+
+            <div class="actions">
+
+              <button
+                class="action fund"
+                onclick="openFunding('${user.id}')"
+              >
+                Fund
+              </button>
+
+              <button
+                class="action"
+                onclick="viewTransactions('${user.id}')"
+              >
+                Transactions
+              </button>
+
+              <button
+                class="action freeze"
+                onclick="toggleFreeze('${user.id}')"
+              >
+                ${user.frozen ? "Unfreeze" : "Freeze"}
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+  }
+
+  updateStats();
+
+}
+
+
+/* STATS */
+
+function updateStats(){
+
+  const total =
+    users.length;
+
+  const active =
+    users.filter(
+      user=>!user.frozen
+    ).length;
+
+  const funds =
+    users.reduce(
+      (sum,user)=>
+        sum + Number(user.balance || 0),
+      0
+    );
+
+  document
+    .getElementById("totalUsers")
+    .textContent=total;
+
+  document
+    .getElementById("activeUsers")
+    .textContent=active;
+
+  document
+    .getElementById("totalFunds")
+    .textContent =
+      "$" +
+      funds.toLocaleString(
+        "en-US",
+        {
+          minimumFractionDigits:2
+        }
+      );
+
+}
+
+
+/* FIND USER */
+
+function findUser(id){
+
+  return users.find(
+    user=>String(user.id)===String(id)
+  );
+
+}
+
+
+/* FUND */
+
+function openFunding(id){
+
+  selectedUserId=id;
+
+  const user =
+    findUser(id);
+
+  if(!user){
+
+    return;
+
+  }
+
+  document
+    .getElementById("fundUserText")
+    .textContent =
+      `Funding demo account for ${user.name}.`;
+
+  document
+    .getElementById("fundAmount")
+    .value="";
+
+  document
+    .getElementById("fundModal")
+    .classList.add("show");
+
+}
+
+
+/* APPLY FUNDING */
+
+function applyFunding(){
+
+  const amount =
+    Number(
+      document
+        .getElementById("fundAmount")
+        .value
+    );
+
+  if(!amount || amount<=0){
+
+    alert(
+      "Enter a valid demo amount."
+    );
+
+    return;
+
+  }
+
+  users = getUsers();
+
+  const user =
+    findUser(selectedUserId);
+
+  if(!user){
+
+    alert(
+      "Demo account not found."
+    );
+
+    return;
+
+  }
+
+  user.balance =
+    Number(user.balance || 0) +
+    amount;
+
+  if(!user.transactions){
+
+    user.transactions=[];
+
+  }
+
+  user.transactions.unshift({
+
+    type:
+      "Admin Funding",
+
+    name:
+      "CARIC BANK Admin",
+
+    amount:
+      amount,
+
+    date:
+      new Date().toLocaleString()
+
+  });
+
+  saveUsers();
+
+  closeModal("fundModal");
+
+  renderUsers();
+
+  alert(
+    "Demo account funded successfully.\n\n" +
+    "No real money was transferred."
+  );
+
+}
+
+
+/* FREEZE */
+
+function toggleFreeze(id){
+
+  users=getUsers();
+
+  const user =
+    findUser(id);
+
+  if(!user){
+
+    return;
+
+  }
+
+  user.frozen =
+    !user.frozen;
+
+  saveUsers();
+
+  renderUsers();
+
+}
+
+
+/* TRANSACTIONS */
+
+function viewTransactions(id){
+
+  users=getUsers();
+
+  const user =
+    findUser(id);
+
+  if(!user){
+
+    return;
+
+  }
+
+  const container =
+    document
+      .getElementById("transactionContent");
+
+
+  if(
+    !user.transactions ||
+    user.transactions.length===0
+  ){
+
+    container.innerHTML =
+      `
+        <p>
+          No transactions for this demo account.
+        </p>
+      `;
+
+  }else{
+
+    container.innerHTML =
+      user.transactions
+        .map(tx=>{
+
+          return `
+
+            <div class="transaction">
+
+              <strong>
+                ${escapeHTML(tx.type)}
+              </strong>
+
+              <small>
+                ${escapeHTML(tx.name)}
+              </small>
+
+              <small>
+                Amount:
+                $${Number(tx.amount).toLocaleString()}
+              </small>
+
+              <small>
+                ${escapeHTML(tx.date)}
+              </small>
+
+            </div>
+
+          `;
+
+        })
+        .join("");
+
+  }
+
+  document
+    .getElementById("transactionsModal")
+    .classList.add("show");
+
+}
+
+
+/* CLOSE */
+
+function closeModal(id){
+
+  document
+    .getElementById(id)
+    .classList.remove("show");
+
+}
+
+
+/* ESCAPE */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* OUTSIDE CLICK */
+
+document
+  .querySelectorAll(".overlay")
+  .forEach(overlay=>{
+
+    overlay.addEventListener(
+      "click",
+      event=>{
+
+        if(event.target===overlay){
+
+          overlay.classList.remove("show");
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* START */
+
+createDemoUser();
+
+</script>
+
+</body>
+</html>
